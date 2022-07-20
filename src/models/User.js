@@ -75,19 +75,19 @@ Pets.belongsTo(User, {
   targetId: "id",
 });
 Country.hasMany(User, {
-  foreignKey: "countryId",
+  foreignKey: "country",
   sourceKey: "id",
 });
 User.belongsTo(Country, {
-  foreignKey: "countryId",
+  foreignKey: "country",
   targetId: "id",
 });
 City.hasMany(User, {
-  foreignKey: "cityId",
+  foreignKey: "city",
   sourceKey: "id",
 });
 User.belongsTo(City, {
-  foreignKey: "cityId",
+  foreignKey: "city",
   targetId: "id",
 });
 
