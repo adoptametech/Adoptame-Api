@@ -8,6 +8,7 @@ const router = Router();
 router.post(
   "/userLogin",
   [
+    body("email", "Formato email incorrecto").trim().isEmail(),
     body("password", "Minimo 6 caracteres").trim().isLength({ min: 6 }),
     body("password", "Formato de password incorrecto")
       .trim()
