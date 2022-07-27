@@ -8,6 +8,7 @@ import fs from "fs";
 
 import { fileURLToPath } from "url";
 
+
 const app = express();
 let swaggerFile = JSON.parse(fs.readFileSync("./swagger_output.json", "utf-8"));
 
@@ -17,16 +18,21 @@ const __dirname = path.dirname(__filename);
 
 //middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, "public")));
 
+
+
+
+
 app.get("/", (req, res) => {
+  // #swagger.ignore = true
   return res.redirect("/docs");
 });
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
-
 
 //use routes
 app.use("/api/v1.0", index);

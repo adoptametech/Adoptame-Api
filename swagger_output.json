@@ -2,17 +2,34 @@
   "swagger": "2.0",
   "info": {
     "title": "Api Rest Adoptame",
-    "description": "Documentación_",
-    "version": "1.0.0"
+    "description": "Todas las rutas del Back :)",
+    "version": "v1.0.0"
   },
   "host": "localhost:5000",
   "basePath": "/",
+  "tags": [
+    {
+      "name": "LOGIN",
+      "description": "Obten tu token y pegalo en \"AUTORIZE\" para usar todas las rutas protegidas"
+    }
+  ],
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Ingresa el token del login: "
+    }
+  },
   "paths": {
     "/api/v1.0/countries/": {
       "get": {
+        "tags": [
+          "COUNTRIES"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -27,6 +44,9 @@
     },
     "/api/v1.0/cities/": {
       "post": {
+        "tags": [
+          "CITIES"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -36,11 +56,15 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/v1.0/cities/{idCountry}": {
       "get": {
+        "tags": [
+          "CITIES"
+        ],
         "description": "",
         "parameters": [
           {
@@ -152,7 +176,12 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1.0/user/{id}": {
@@ -178,16 +207,18 @@
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Bad Request"
-          },
           "401": {
             "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -238,9 +269,17 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "put": {
+        "tags": [
+          "USER"
+        ],
         "description": "",
         "parameters": [
           {
@@ -292,11 +331,19 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1.0/user/soli/{id}": {
       "put": {
+        "tags": [
+          "SOLICITUD"
+        ],
         "description": "",
         "parameters": [
           {
@@ -336,7 +383,12 @@
           "500": {
             "description": "Internal Server Error"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/v1.0/pets/": {
@@ -376,50 +428,82 @@
             "type": "string"
           },
           {
-            "name": "photos",
-            "in": "formData",
-            "type": "file",
-            "required": false,
-            "description": "Selecciona una foto",
-            "collectionFormat": "multi",
-            "items": {
-              "type": "file"
-            }
-          },
-          {
             "name": "body",
             "in": "body",
             "description": "Some description...",
             "schema": {
               "type": "object",
               "properties": {
+                "userId": {
+                  "type": "number",
+                  "example": 1
+                },
                 "name": {
                   "type": "string",
-                  "example": "user_test"
+                  "example": "pet test"
                 },
                 "typeId": {
                   "type": "string",
-                  "example": "dog"
+                  "example": "perro"
                 },
                 "breedId": {
                   "type": "number",
                   "example": 2
                 },
+                "colorId": {
+                  "type": "number",
+                  "example": 31
+                },
+                "age": {
+                  "type": "string",
+                  "example": "joven"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "macho"
+                },
+                "size": {
+                  "type": "string",
+                  "example": "mediano"
+                },
                 "coat": {
                   "type": "string",
-                  "example": "short"
+                  "example": "largo"
                 },
-                "specialCares": {
-                  "type": "boolean",
-                  "example": false
+                "health": {
+                  "type": "string",
+                  "example": "vacunas al dia"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Alguna descripción para una mascota"
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "amigable",
+                    "cariñoso"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "castrated": {
                   "type": "boolean",
                   "example": false
                 },
-                "gender": {
-                  "type": "string",
-                  "example": "male"
+                "attributes": {
+                  "type": "object",
+                  "properties": {
+                    "house_trained": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "special_needs": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
                 },
                 "environment": {
                   "type": "object",
@@ -428,45 +512,28 @@
                       "type": "boolean",
                       "example": true
                     },
-                    "dogs": {},
-                    "cats": {}
+                    "dogs": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "cats": {
+                      "type": "boolean",
+                      "example": false
+                    }
                   }
-                },
-                "tags": {
-                  "type": "array",
-                  "example": [
-                    "friendly",
-                    "affectionate"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "size": {
-                  "type": "string",
-                  "example": "medium"
-                },
-                "color": {
-                  "type": "string",
-                  "example": "marron"
-                },
-                "age": {
-                  "type": "string",
-                  "example": "young"
-                },
-                "health": {
-                  "type": "string",
-                  "example": "vaccinations up to date"
-                },
-                "description": {
-                  "type": "string",
-                  "example": "happy dog"
-                },
-                "userId": {
-                  "type": "number",
-                  "example": 1
                 }
               }
+            }
+          },
+          {
+            "name": "photos",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Selecciona fotos de la mascota",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
             }
           }
         ],
@@ -480,10 +547,15 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
-    "/api/v1.0/pets/{id}": {
+    "/api/v1.0/pets/{petId}": {
       "get": {
         "tags": [
           "PETS"
@@ -491,7 +563,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "petId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -511,9 +583,12 @@
           "PETS"
         ],
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
-            "name": "id",
+            "name": "petId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -526,61 +601,111 @@
           {
             "name": "body",
             "in": "body",
+            "description": "Some description...",
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "new name pet test"
                 },
                 "typeId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "perro"
                 },
                 "breedId": {
-                  "example": "any"
-                },
-                "coat": {
-                  "example": "any"
-                },
-                "specialCares": {
-                  "example": "any"
-                },
-                "castrated": {
-                  "example": "any"
-                },
-                "gender": {
-                  "example": "any"
-                },
-                "environment": {
-                  "example": "any"
-                },
-                "tags": {
-                  "example": "any"
-                },
-                "size": {
-                  "example": "any"
-                },
-                "age": {
-                  "example": "any"
-                },
-                "health": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "status": {
-                  "example": "any"
-                },
-                "urlPhotosDb": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2
                 },
                 "colorId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 31
+                },
+                "age": {
+                  "type": "string",
+                  "example": "joven"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "macho"
+                },
+                "size": {
+                  "type": "string",
+                  "example": "mediano"
+                },
+                "coat": {
+                  "type": "string",
+                  "example": "largo"
+                },
+                "health": {
+                  "type": "string",
+                  "example": "vacunas al dia"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Alguna descripción para una mascota"
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "amigable",
+                    "cariñoso"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "castrated": {
+                  "type": "boolean",
+                  "example": false
                 },
                 "attributes": {
-                  "example": "any"
+                  "type": "object",
+                  "properties": {
+                    "house_trained": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "special_needs": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                },
+                "environment": {
+                  "type": "object",
+                  "properties": {
+                    "children": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "dogs": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "cats": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                },
+                "urlPhotosDb": {
+                  "type": "array",
+                  "example": [],
+                  "items": {}
                 }
               }
+            }
+          },
+          {
+            "name": "photos",
+            "in": "formData",
+            "type": "array",
+            "required": true,
+            "description": "Selecciona fotos de la mascota",
+            "collectionFormat": "multi",
+            "items": {
+              "type": "file"
             }
           }
         ],
@@ -594,7 +719,12 @@
           "401": {
             "description": "Unauthorized"
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -603,7 +733,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "id",
+            "name": "petId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -627,11 +757,53 @@
         }
       }
     },
+    "/api/v1.0/pets/foundation": {
+      "get": {
+        "tags": [
+          "PETS"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1.0/pets/user/{userId}": {
+      "get": {
+        "tags": [
+          "PETS"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/v1.0/pets/favourite/": {
       "get": {
         "tags": [
           "PETS/FAVOURITE"
         ],
+        "summary": "Todos los favoritos",
         "description": "",
         "parameters": [],
         "responses": {
@@ -725,21 +897,55 @@
         }
       }
     },
+    "/api/v1.0/pets/addPets/{results}": {
+      "get": {
+        "tags": [
+          "PETS"
+        ],
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "results",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Agrega un Nº de mascotas para generar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/v1.0/auth/userLogin": {
       "post": {
+        "tags": [
+          "LOGIN"
+        ],
         "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "description": "Iniciar session para obtener token",
             "schema": {
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "test_user_80178606@testuser.com"
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Test18@@"
                 }
               }
             }
@@ -766,6 +972,9 @@
     },
     "/api/v1.0/type-pet/": {
       "get": {
+        "tags": [
+          "PETS/TYPES"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -778,6 +987,9 @@
         }
       },
       "post": {
+        "tags": [
+          "PETS/TYPES"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -789,6 +1001,9 @@
     },
     "/api/v1.0/breed-pet/": {
       "get": {
+        "tags": [
+          "PETS/BREEDS"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -798,6 +1013,9 @@
         }
       },
       "post": {
+        "tags": [
+          "PETS/BREEDS"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -809,6 +1027,9 @@
     },
     "/api/v1.0/breed-pet/{type}": {
       "get": {
+        "tags": [
+          "PETS/BREEDS"
+        ],
         "description": "",
         "parameters": [
           {
@@ -830,6 +1051,9 @@
     },
     "/api/v1.0/color-pet/": {
       "get": {
+        "tags": [
+          "PETS/COLORS"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -841,6 +1065,9 @@
     },
     "/api/v1.0/color-pet/{type}": {
       "get": {
+        "tags": [
+          "PETS/COLORS"
+        ],
         "description": "",
         "parameters": [
           {
@@ -860,6 +1087,9 @@
         }
       },
       "post": {
+        "tags": [
+          "PETS/COLORS"
+        ],
         "description": "",
         "parameters": [
           {
@@ -876,29 +1106,11 @@
         }
       }
     },
-    "/api/v1.0/addPets/{results}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "results",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/v1.0/verify/": {
       "post": {
+        "tags": [
+          "VERIFY"
+        ],
         "description": "",
         "parameters": [
           {
@@ -926,6 +1138,9 @@
     },
     "/api/v1.0/verify/tk/{tok}": {
       "get": {
+        "tags": [
+          "VERIFY"
+        ],
         "description": "",
         "parameters": [
           {
@@ -944,6 +1159,9 @@
     },
     "/api/v1.0/verify/recpass": {
       "post": {
+        "tags": [
+          "VERIFY"
+        ],
         "description": "",
         "parameters": [
           {
@@ -971,6 +1189,9 @@
     },
     "/api/v1.0/verify/modpass/{tak}": {
       "put": {
+        "tags": [
+          "VERIFY"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1007,6 +1228,9 @@
     },
     "/api/v1.0/auto/": {
       "post": {
+        "tags": [
+          "SEND EMAIL"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1046,6 +1270,9 @@
     },
     "/api/v1.0/donations/urlPreferential": {
       "post": {
+        "tags": [
+          "MERCADOPAGO"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1077,8 +1304,28 @@
         }
       }
     },
+    "/api/v1.0/donations/mercadopago": {
+      "get": {
+        "tags": [
+          "MERCADOPAGO"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/v1.0/donations/mercadopago/{idPayment}": {
       "get": {
+        "tags": [
+          "MERCADOPAGO"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1100,6 +1347,9 @@
     },
     "/api/v1.0/donations/": {
       "post": {
+        "tags": [
+          "DONATION"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1121,13 +1371,13 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "4700": {
-            "description": ""
           }
         }
       },
       "get": {
+        "tags": [
+          "DONATION"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -1142,6 +1392,9 @@
     },
     "/api/v1.0/donations/{userId}": {
       "get": {
+        "tags": [
+          "DONATION"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1163,6 +1416,9 @@
     },
     "/api/v1.0/fundations/": {
       "get": {
+        "tags": [
+          "USER"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -1171,6 +1427,233 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1.0/start/": {
+      "post": {
+        "tags": [
+          "COMENTS"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "msg": {
+                  "type": "object",
+                  "properties": {
+                    "coment": {
+                      "type": "string",
+                      "example": "comentario"
+                    },
+                    "point": {
+                      "type": "string",
+                      "example": "0-5"
+                    }
+                  }
+                },
+                "id": {
+                  "type": "string",
+                  "example": "fundacionId"
+                },
+                "usId": {
+                  "type": "string",
+                  "example": "usuarioId"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1.0/start/{id}": {
+      "get": {
+        "tags": [
+          "COMENTS"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/v1.0/match/{userId}": {
+      "post": {
+        "tags": [
+          "MATCH"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "age": {
+                  "example": "any"
+                },
+                "coat": {
+                  "example": "any"
+                },
+                "genre": {
+                  "example": "any"
+                },
+                "haTenidoMascota": {
+                  "example": "any"
+                },
+                "size": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1.0/match/matchUser/{id}": {
+      "put": {
+        "tags": [
+          "MATCH"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "age": {
+                  "example": "any"
+                },
+                "coat": {
+                  "example": "any"
+                },
+                "genre": {
+                  "example": "any"
+                },
+                "haTenidoMascota": {
+                  "example": "any"
+                },
+                "size": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1.0/match/delete/{id}": {
+      "delete": {
+        "tags": [
+          "MATCH"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }

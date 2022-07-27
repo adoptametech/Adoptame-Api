@@ -1,17 +1,11 @@
-import { User } from "../models/User.js";
+import { findAllFundations } from "../models/Views/fundations.views.js";
 
 export const getFundations = async (req, res) => {
+  // #swagger.tags = ['USER']
   try {
-    const fundation = await User.findAll({
-      attributes: {
-        exclude: ["password"],
-      },
-      where: {
-        role: "fundation",
-      },
-    });
-    return res.send(fundation);
+    const fundations = await findAllFundations();
+    return res.send(fundations);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };

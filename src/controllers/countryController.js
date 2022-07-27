@@ -3,6 +3,7 @@ import { data } from "../database/countries.js";
 
 //This controller looks for the countries in the database and if they don't exist, it creates them
 export const getCountries = async (req, res) => {
+  // #swagger.tags = ['COUNTRIES']
   try {
     const countries = data.countries.map((country) => {
       return {

@@ -17,7 +17,7 @@ export const checkRole =(roles)=> async (req, res, next )=>{
         return res.status(404).json({error:"no tienes permiso"})
       }
     } catch (error) {
-      return res.status(401).send({ message: error.message });
+      return res.status(401).send({ error: error.message });
     }
 
 

@@ -5,6 +5,7 @@ import { Country } from "./Country.js";
 import { Pets } from "./Pets.js";
 import { UserPetsFavourite } from './FavouritePet.js';
 import { Donations } from './Donations.js';
+import { Coments } from "./comentsUser.js";
 
 export const User = sequelize.define(
   "user",
@@ -44,10 +45,6 @@ export const User = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    donaciones: {
-      type: DataTypes.DOUBLE,
-      defaultValue: 0,
-    },
     address: {
       type: DataTypes.TEXT,
       defaultValue: "",
@@ -59,6 +56,22 @@ export const User = sequelize.define(
       type: DataTypes.TEXT,
       defaultValue: null,
     },
+    photo: {
+      type: DataTypes.TEXT,
+    },
+    starts: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      defaultValue: []
+    },
+    comentario: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      defaultValue: []
+    },
+    points: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
+      defaultValue: []
+    }
+
   },
   {
     timestamps: false,
@@ -92,14 +105,20 @@ User.belongsTo(City, {
 });
 
 Pets.belongsToMany(User, {
-  through: UserPetsFavourite,
-  foreignKey: "userId",
+  through: {
+    model: UserPetsFavourite,
+    unique: false
+  },
+  foreignKey: "petId",
   targetId: "id"
 });
 
 User.belongsToMany(Pets, {
-  through: UserPetsFavourite,
-  foreignKey: "petId",
+  through: {
+    model: UserPetsFavourite,
+    unique: false
+  },
+  foreignKey: "userId",
   targetId: "id"
 });
 
@@ -118,4 +137,13 @@ User.belongsToMany(User, {
   },
   as: "to",
   foreignKey: "toUserId",
+});
+User.hasMany(Coments, {
+  foreignKey: "userId",
+  sourceKey: "id",
+});
+
+Coments.belongsTo(User, {
+  foreignKey: "userId",
+  targetId: "id",
 });

@@ -5,6 +5,15 @@ import { Pets } from '../models/Pets.js';
 const router = Router();
 
 router.get('/:results', async (req, res) => {
+  /*
+  #swagger.tags = ['PETS']
+  #swagger.consumes = ['multipart/form-data']  
+  #swagger.parameters['results'] = {
+      type: 'integer',
+      required: 'true',
+      description: 'Agrega un Nº de mascotas para generar',
+  }
+  */
   try {
     const { results } = req.params;
     if (results) {

@@ -10,11 +10,30 @@ import { tokenSing } from "../helpers/handleJwt.js";
  */
 
 export const login = async (req, res) => {
+  /*
+  #swagger.tags = ['LOGIN']
+  #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Iniciar session para obtener token',
+      schema: {
+        email: "test_user_80178606@testuser.com",
+        password: "Test18@@",
+      }
+  }
+  */
   try {
     const { email, password } = req.body;
     const user = await User.findOne({
       where: { email },
-      attributes: ["id", "name", "lastName", "email", "role", "password"],
+      attributes: [
+        "id",
+        "name",
+        "lastName",
+        "email",
+        "role",
+        "password",
+        "verification",
+      ],
     });
 
     if (!user) {
@@ -26,6 +45,11 @@ export const login = async (req, res) => {
 
     if (!checkPassword) {
       return res.status(401).send({ Error: "Password Incorrect" });
+    }
+    if (user.verification === false) {
+      return res
+        .status(401)
+        .send({ Error: "Usuario no verificado, revise su email" });
     }
 
     user.set("password", undefined, { strict: false });

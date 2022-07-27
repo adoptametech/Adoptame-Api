@@ -4,7 +4,8 @@ import "dotenv/config";
 const {
   MERCADOPAGO_ACCESS_TOKEN,
   ULR_DEPLOYED_FRONTEND,
-  URL_DEPLOYED_BACKEND
+  URL_DEPLOYED_BACKEND,
+  APP_ID_MERCADOPAGO
 } = process.env;
 
 export const newPreferentialPaymentService = async (dataBody) => {
@@ -20,58 +21,15 @@ export const newPreferentialPaymentService = async (dataBody) => {
   const body = {
     items,
     payer,
-    /*     items: [
-          {
-            id: 20,
-            title: "Donación para fundacion",
-            currency_id: "PEN",
-            picture_url: "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
-            description: "Donación a una mascota",
-            category_id: "donations",
-            quantity: 1,
-            unit_price: 10
-          }
-        ],
-        payer: {
-          name: "Juan",
-          surname: "Lopez",
-          email: "test_user_83636644@testuser.com",
-          phone: {
-            area_code: "11",
-            number: "4444-4444"
-          },
-          identification: {
-            type: "DNI",
-            number: "12345678"
-          },
-          address: {
-            street_name: "Street",
-            street_number: 123,
-            zip_code: "5700"
-          }
-        }, */
-    auto_return: "all", // solo a pagos aprovados
+    auto_return: "all", // solo a pagos aprobados
     back_urls: {
-      // success: "http://localhost:5000/api/v1.0/donations/success",
       success: `${ULR_DEPLOYED_FRONTEND}/sponsor/confirm`,
-      failure: `${ULR_DEPLOYED_FRONTEND}/sponsor`,
-      pending: "http://www.pending.com"
+      failure: `${ULR_DEPLOYED_FRONTEND}`,
+      pending: `${ULR_DEPLOYED_FRONTEND}`
     },
     metadata,
-    // notification_url: "https://api-rest-adoptame.up.railway.app/api/v1.0/pets/notif?source_news=webhooks",
-    notification_url: `${URL_DEPLOYED_BACKEND}/api/v1.0/donations?source_news=webhooks`
-    /*     metadata: {
-          fromUser: {
-            country: "PER"
-            id: 1,
-            typeUser: "User"
-          },
-          toUser: {
-            country: "PER"
-            id: 1,
-            typeUser: "User"
-          }
-        } */
+    notification_url: `${URL_DEPLOYED_BACKEND}/api/v1.0/donations?source_news=webhooks`,
+    external_reference: APP_ID_MERCADOPAGO
   }
   const { data } = await axios.post(url, body, {
     headers: {
@@ -87,11 +45,28 @@ export const getPaymentByIdService = async (idPaymet) => {
 
   const url = `https://api.mercadopago.com/v1/payments/${idPaymet}`;
 
-  const payments = await axios.get(url, {
+  const { data } = await axios.get(url, {
     headers: {
       Authorization: `Bearer ${MERCADOPAGO_ACCESS_TOKEN}`
     }
   });
 
-  return payments.data;
+  return data;
+}
+
+export const getPaymentsService = async () => {
+
+  const sort = 'date_created'
+  const criteria = 'desc'
+  const external_reference = APP_ID_MERCADOPAGO
+
+  const url = `https://api.mercadopago.com/v1/payments/search?sort=${sort}&criteria=${criteria}&external_reference=${external_reference}`;
+
+  const { data } = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${MERCADOPAGO_ACCESS_TOKEN}`
+    }
+  });
+
+  return data.results;
 }

@@ -1,22 +1,21 @@
 import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
-import { sendEmails } from "../helpers/sendEmails.js";
 import { encrypt } from "../helpers/handleBcrypt.js";
 import { autoMail } from "../helpers/sendEmails.js";
-
-const { URL_FRONT, JWT_SECRET } = process.env;
-const url = URL_FRONT || "localhost:5000";
+const { ULR_DEPLOYED_FRONTEND, JWT_SECRET } = process.env;
+const url = ULR_DEPLOYED_FRONTEND || "localhost:5000";
 
 
 
 export const veriEmail = async (req, res) => {
+    // #swagger.tags = ['VERIFY']
     try {
       const {email} = req.body;
       let busqueda = await User.findOne({
           where:{email:email}
         })
-        if (!busqueda) {return res.status(400).json({msg: "the email is not registered"})}
-        if (busqueda.verification) {return res.status(400).json({msg: "the email not required verification"})}
+        if (!busqueda) {return res.status(400).json({error: "the email is not registered"})}
+        if (busqueda.verification) {return res.status(400).json({error: "the email not required verification"})}
         if (!(busqueda.verification)) {
 
            //let token = tokenSing(user);
@@ -28,11 +27,10 @@ export const veriEmail = async (req, res) => {
                 {
                     expiresIn: 900,
                 }
-                );
+                ); 
 
-
-                let url2 ="adoptame.vercel.app/email-confirmed"
-                let button ={text: "confirmacion de correo", link: `http://${url2}/api/v1.0/verify/tk/${token}`}
+                //let url2 ="adoptame.vercel.app"
+                let button ={text: "confirmacion de correo", link: `${url}/email-confirmed/api/v1.0/verify/tk/${token}`}
                 let info = "Te has registrado exitosamente en adoptaMe, por favor confirma tu correo abajo"
                 let from = "Verification email";
                 let to = email;
@@ -41,7 +39,7 @@ export const veriEmail = async (req, res) => {
                 autoMail(from, to, from,titulo, info, button)
                 
                 
-                res.status(200).json({msg: "send email"})
+                return res.status(200).json({msg: "send email"})
         }
 
 
@@ -51,6 +49,7 @@ export const veriEmail = async (req, res) => {
 }
 
 export const logVerify = async (req, res) => {
+    // #swagger.tags = ['VERIFY']
     try {
         const {tok} =req.params;
         let info = jwt.decode(tok);
@@ -59,24 +58,25 @@ export const logVerify = async (req, res) => {
             where:{id:info.id}
           })
         
-          if (!busqueda) {res.json({msg: "verification fail"})}
+          if (!busqueda) {return res.json({error: "verification fail"})}
 
           await User.update({verification: true}, {where: {id: info.id}})
 
-          res.json({msg: "verified email"})
-        
+          return res.json({msg: "verified email"})
+         
     } catch (error) {
         console.log(error)
-        res.json({msg: "verification fail"})
+        return res.json({error: "verification fail"})
     }
 }
 export const petiPass = async (req, res) => {
+    // #swagger.tags = ['VERIFY']
     try {
         const {email} = req.body;
       let busqueda = await User.findOne({
           where:{email:email}
         })
-        if (!busqueda) {res.status(400).json({msg: "the email is not registered"})}
+        if (!busqueda) {return res.status(400).json({error: "the email is not registered"})}
         
         // let token = tokenSing(busqueda)
         let token = jwt.sign(
@@ -98,14 +98,15 @@ export const petiPass = async (req, res) => {
 
             autoMail(from, to, from,titulo, info, button)
 
-            res.json({msg: "send email"})
+            return res.json({msg: "send email"})
         
     } catch (error) {
         console.log(error)
-        res.json({msg: "verification fail"})
+        return res.json({error: "verification fail"})
     }
 }
 export const recuperated = async (req, res) => {
+    // #swagger.tags = ['VERIFY']
     try {
         const {tak} = req.params;
         const {password1, password2} = req.body;
@@ -113,15 +114,15 @@ export const recuperated = async (req, res) => {
         let busqueda = await User.findOne({
             where:{id:info.id}
           })
-        if (!busqueda) {return res.status(400).json({msg: "verification fail"})}
-        if (password1!==password2) {return res.status(400).json({msg: "the password does not match"})}
+        if (!busqueda) {return res.status(400).json({error: "verification fail"})}
+        if (password1!==password2) {return res.status(400).json({error: "the password does not match"})}
         let passwordHash = await encrypt(password1);
         await User.update({password: passwordHash}, {where: {id: info.id}})
-        res.status(200).json({msg: "updated password"})
+        return res.status(200).json({msg: "updated password"})
         
         
     } catch (error) {
         console.log(error)
-        res.json({msg: "verification fail"})
+        return res.json({error: "verification fail"})
     }
 }

@@ -13,6 +13,9 @@ export const Solicitudes = sequelize.define(
         autoIncrement: true,
         primaryKey: true,
       },
+      solicitud:{
+        type: DataTypes.STRING
+      },
       estado:{
         type: DataTypes.ENUM,
         values: ["pendiente", "aprobado", "rechazado"],

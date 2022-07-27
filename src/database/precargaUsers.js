@@ -2,7 +2,7 @@ export const users = [
   {
     "name": "luis",
     "lastName": "Lopez",
-    "email": "user1@test.com",
+    "email": "test_user_80178606@testuser.com",
     "address": "Avenida siempre vivas",
     "phone": "111111",
     "role": "user",
@@ -12,7 +12,7 @@ export const users = [
   {
     "name": "Carlos",
     "lastName": "perez",
-    "email": "user2@test.com",
+    "email": "test_user_26080513@testuser.com",
     "address": "Irigoyen 254",
     "phone": "111111",
     "role": "user",
@@ -22,17 +22,17 @@ export const users = [
   {
     "name": "Maria",
     "lastName": "Gomez",
-    "email": "user3@test.com",
+    "email": "test_user_83636644@testuser.com",
     "address": "Calle Paraguay 4567",
     "phone": "111111",
     "role": "user",
-    "countryId": "CHL",
-    "cityId": 525
+    "countryId": "PER",
+    "cityId": 1836
   },
   {
     "name": "Carla",
     "lastName": "Fuenmayor",
-    "email": "user4@test.com",
+    "email": "test_user_83672111@testuser.com",
     "address": "Calle larez 342",
     "phone": "111111",
     "role": "user",
@@ -42,7 +42,7 @@ export const users = [
   {
     "name": "Pepe",
     "lastName": "Milla",
-    "email": "user5@test.com",
+    "email": "test_user_26110942@testuser.com",
     "address": "Calle Bolivar 3445",
     "phone": "111111",
     "role": "user",
@@ -52,7 +52,7 @@ export const users = [
   {
     "name": "jose",
     "lastName": "Ruinas",
-    "email": "user6@test.com",
+    "email": "test_user_87539332@testuser.com",
     "address": "Calle Ramiro 3256",
     "phone": "111111",
     "role": "user",

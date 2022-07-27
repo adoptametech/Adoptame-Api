@@ -6,6 +6,42 @@ import { City } from '../../models/City.js';
 import { Country } from '../../models/Country.js';
 import { ColorPet } from '../../models/Colorpet.js';
 
+const removePropertiesFrom = (object) => {
+  delete object["user.id"];
+  delete object["user.name"];
+  delete object["user.email"];
+  delete object["user.phone"];
+  delete object["user.lastName"];
+  delete object["user.password"];
+  delete object["user.address"];
+  delete object["user.photo"];
+  delete object["user.starts"];
+  delete object["user.comentario"];
+  delete object["user.points"];
+
+  delete object["user.cityId"];
+  delete object["user.city.name"];
+  delete object["user.city.id"];
+  delete object["user.city.countryId"];
+
+  delete object["user.country.id"];
+  delete object["user.country.name"];
+  delete object["user.country.currency"];
+  delete object["user.country.symbol"];
+
+  delete object["user.countryId"];
+  delete object["user.role"];
+  delete object["user.active"];
+  delete object["user.verification"];
+  delete object["user.donaciones"];
+  delete object["user.document"];
+
+  delete object["colorpet.nameColor"];
+  delete object["typepet.nameType"];
+  delete object["breedpet.nameBreed"];
+  delete object["colorId"];
+}
+
 export const findAllPets = async () => {
   const pets = await Pets.findAll({
     attributes: { exclude: ['breedId', 'typeId'] },
@@ -36,10 +72,22 @@ export const findAllPets = async () => {
         ]
       }
     ],
+    where: {
+      status: 'adoptable' || 'adoptado'
+    },
     raw: true,
   });
 
   const responsePets = pets.map((pet) => {
+
+    // renombrar Propiedades
+    pet['type'] = pet["typepet.nameType"];
+    pet['breed'] = pet["breedpet.nameBreed"];
+    pet['color'] = pet["colorpet.nameColor"];
+    pet['role'] = pet["user.role"];
+
+    // formatear valores de propiedades
+    pet.status_changed_at = Number(new Date(pet["published_at"])); // EPOCH format
     pet.environment = JSON.parse(pet.environment)
     pet.attributes = JSON.parse(pet.attributes)
     pet.photos = pet.photos.map((photo) => {
@@ -50,142 +98,41 @@ export const findAllPets = async () => {
       }
     })
 
-    pet['type'] = pet["typepet.nameType"];
-    pet['breed'] = pet["breedpet.nameBreed"];
-    pet['color'] = pet["colorpet.nameColor"];
-    let date = new Date(pet["published_at"]);
-    pet.status_changed_at = Number(date); // EPOCH format
+    // nuevas propiedades
     pet.contact = {
+      name: pet["user.name"],
       email: pet["user.email"],
       phone: pet["user.phone"],
+      currency: pet["user.country.currency"],
       address: {
         address: pet["user.address"],
         city: pet["user.city.name"],
         state: pet["user.state.name"] || null,
         postcode: pet["user.city.postcode"] || null,
-        country: pet["user.countryId"]
+        country: pet["user.countryId"],
       }
     }
-
-    delete pet["user.id"];
-    delete pet["user.name"];
-    delete pet["user.email"];
-    delete pet["user.phone"];
-    delete pet["user.lastName"];
-    delete pet["user.password"];
-    delete pet["user.address"];
-    delete pet["user.cityId"];
-    delete pet["user.city.name"];
-    delete pet["user.city.id"];
-    delete pet["user.city.countryId"];
-
-    delete pet["user.country.id"];
-    delete pet["user.country.name"];
-    delete pet["user.country.currency"];
-    delete pet["user.country.symbol"];
-
-    delete pet["user.countryId"];
-    delete pet["user.role"];
-    delete pet["user.active"];
-    delete pet["user.verification"];
-    delete pet["user.donaciones"];
-    delete pet["user.document"];
-
-    delete pet["colorpet.nameColor"];
-    delete pet["typepet.nameType"];
-    delete pet["breedpet.nameBreed"];
-    delete pet["colorId"];
-
+    // remover propiedades innesesarias
+    removePropertiesFrom(pet)
     return pet
   });
   return responsePets;
 }
 
-export const findByPkPets = async (id) => {
-  const pet = await Pets.findByPk(id, {
-    attributes: { exclude: ['breedId', 'typeId'] },
-    include: [
-      {
-        model: ColorPet,
-        attributes: ['nameColor'],
-      },
-      {
-        model: TypePet,
-        attributes: ['nameType'],
-      },
-      {
-        model: BreedPet,
-        attributes: ['nameBreed'],
-      },
-      {
-        model: User,
-        include: [
-          {
-            model: Country,
-          },
-          {
-            model: City,
-          }
-        ]
-      }
-    ],
-    raw: true,
-  });
-  pet.environment = JSON.parse(pet.environment)
-  pet.attributes = JSON.parse(pet.attributes)
-  pet.photos = pet.photos.map((photo) => {
-    return {
-      option_1: photo,
-      option_2: photo,
-      option_3: photo,
-    }
-  })
+export const findByUser = async (userId) => {
+  const allPets = await findAllPets();
+  const petsByUserId = allPets.filter(pet => pet.userId == userId);
+  return petsByUserId
+}
 
-  pet['type'] = pet["typepet.nameType"];
-  pet['breed'] = pet["breedpet.nameBreed"];
-  pet['color'] = pet["colorpet.nameColor"];
-  let date = new Date(pet["published_at"]);
-  pet.status_changed_at = Number(date); // EPOCH format
-  pet.contact = {
-    email: pet["user.email"],
-    phone: pet["user.phone"],
-    address: {
-      address: pet["user.address"],
-      city: pet["user.city.name"],
-      state: pet["user.state.name"] || null,
-      postcode: pet["user.city.postcode"] || null,
-      country: pet["user.countryId"]
-    }
-  }
+export const findByPkPets = async (petId) => {
+  const allPets = await findAllPets();
+  const petById = allPets.find(pet => pet.id == petId);
+  return petById
+}
 
-  delete pet["user.id"];
-  delete pet["user.name"];
-  delete pet["user.email"];
-  delete pet["user.phone"];
-  delete pet["user.lastName"];
-  delete pet["user.password"];
-  delete pet["user.address"];
-  delete pet["user.cityId"];
-  delete pet["user.city.name"];
-  delete pet["user.city.id"];
-  delete pet["user.city.countryId"];
-
-  delete pet["user.country.id"];
-  delete pet["user.country.name"];
-  delete pet["user.country.currency"];
-  delete pet["user.country.symbol"];
-
-  delete pet["user.countryId"];
-  delete pet["user.role"];
-  delete pet["user.active"];
-  delete pet["user.verification"];
-  delete pet["user.donaciones"];
-  delete pet["user.document"];
-
-  delete pet["colorpet.nameColor"];
-  delete pet["typepet.nameType"];
-  delete pet["breedpet.nameBreed"];
-  delete pet["colorId"];
-
-  return pet
+export const findByFoundation = async () => {
+  const allPets = await findAllPets();
+  const petsByFoundations = allPets.filter(pet => pet.role === "fundation");
+  return petsByFoundations
 }

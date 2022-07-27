@@ -7,12 +7,21 @@ export const Donations = sequelize.define('donations', {
     autoIncrement: true,
     primaryKey: true,
   },
+  idPaymentMercadoPago: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
   date: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: new Date()
   },
   status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  currency: {
     type: DataTypes.STRING,
     allowNull: false,
   },

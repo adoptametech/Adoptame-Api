@@ -57,15 +57,18 @@ const citiesByCountry = () => {
 };
 
 export const createCities = async (req, res) => {
+  // #swagger.tags = ['CITIES']
+  // #swagger.deprecated = true
   citiesByCountry();
   try {
     return res.json({ message: "Cities save in database" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
 export const getCitiesById = async (req, res) => {
+  // #swagger.tags = ['CITIES']
   try {
     const { idCountry } = req.params;
     const country = await Country.findByPk(idCountry);
@@ -79,6 +82,6 @@ export const getCitiesById = async (req, res) => {
     }
     return res.json({ error: "Cities not found" });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };

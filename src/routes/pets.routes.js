@@ -1,31 +1,31 @@
 import { Router } from "express";
 import { upload } from "../middlewares/cloudinary.js";
+import { authMiddleware } from "../middlewares/session.js";
 import favouritePet from "./favouritePet.routes.js";
+import petsDataFake from "./petsDataFake.routes.js";
 
 import {
   getAllPets,
   getPetsById,
+  getPetsByIdUser,
+  getPetsFoundation,
   createPets,
   updatePets,
-  deletePets,
+  changeStatusPets,
 } from "../controllers/petsController.js";
-import validatorPets from "../middlewares/validatorPets.js";
-import { authMiddleware } from "../middlewares/session.js";
 
 const router = Router();
 
 router.use('/favourite', favouritePet)
+router.use('/addPets', petsDataFake);
 
 router.get("/", getAllPets);
-router.get("/:id", getPetsById);
-router.post(
-  "/",
-  authMiddleware,
-  upload.array("photos"),
-  validatorPets,
-  createPets
-);
-router.put("/:id", authMiddleware, upload.array("photos"), updatePets);
-router.delete("/:id", authMiddleware, deletePets);
+router.get("/foundation", getPetsFoundation);
+router.get("/user/:userId", getPetsByIdUser);
+router.get("/:petId", getPetsById);
+
+router.post("/", authMiddleware, upload.array("photos"), createPets);
+router.put("/:petId", authMiddleware, upload.array("photos"), updatePets);
+router.patch("/:petId", authMiddleware, changeStatusPets);
 
 export default router;

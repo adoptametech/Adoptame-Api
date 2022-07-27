@@ -21,10 +21,13 @@ import colorPet from "./colorsPet.routes.js";
 import donation from "./donation.routes.js";
 import fundation from "./fundation.routes.js";
 
-import petsDataFake from "./petsDataFake.routes.js";
-
 import veriEmail from "./veriEmail.routes.js";
 import automail from "./autoMail.routes.js";
+
+import start from "./starts.routes.js";
+import match from "./match.routes.js"
+import adoption from "./adoption.routes.js"
+
 
 const router = Router();
 
@@ -38,13 +41,15 @@ router.use("/type-pet", typePet);
 router.use("/breed-pet", breedPet);
 router.use("/color-pet", colorPet);
 
-router.use('/addPets', petsDataFake);
-
 router.use("/verify", veriEmail);
 router.use("/auto", automail);
 
 router.use("/donations", donation);
 
 router.use("/fundations", fundation);
+
+router.use("/start", start)
+router.use('/match', match)
+router.use("/adoption",adoption)
 
 export default router;

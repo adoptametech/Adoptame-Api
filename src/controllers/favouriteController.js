@@ -2,6 +2,7 @@ import { UserPetsFavourite } from '../models/FavouritePet.js';
 import { findAllPets, findByPkPets } from '../models/Views/pets.views.js';
 
 export const favouritePetsByUser = async (userId) => {
+  // #swagger.tags = ['PETS/FAVOURITE']
   try {
     if (userId) {
       const petsFavorites = await UserPetsFavourite.findAll({
@@ -26,19 +27,20 @@ export const getFavouritePetsByUser = async (req, res) => {
     const myFavouritePets = await favouritePetsByUser(userId);
     return res.status(200).json(myFavouritePets)
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ error: error.message });
   }
 }
 
 export const getFavouritePets = async (req, res) => {
   // #swagger.tags = ['PETS/FAVOURITE']
+  // #swagger.summary = 'Todos los favoritos'
   try {
     const allPetsFavorites = await UserPetsFavourite.findAll();
     const allDetailPets = allPetsFavorites.map(userPet => findByPkPets(userPet.petId));
     const allFavoritePets = await Promise.all(allDetailPets);
     return res.status(200).json(allFavoritePets)
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ error: error.message });
   }
 }
 
@@ -53,7 +55,7 @@ export const createFavouritePet = async (req, res) => {
     })
     return res.status(201).json({ data: newFavouritePet, message: 'add to favorites successfully' })
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ error: error.message });
   }
 }
 
@@ -68,6 +70,6 @@ export const deleteFafouritePet = async (req, res) => {
       return res.status(201).json({ message: 'successfully removed from favorites' })
     }
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ error: error.message });
   }
 }
